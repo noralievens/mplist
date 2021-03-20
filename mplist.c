@@ -30,13 +30,13 @@ struct options {
 
 struct mpd_connection* conn()
 {
-	struct mpd_connection* c = mpd_connection_new(server.host, server.port, 0);
-	enum mpd_error err = mpd_connection_get_error(c);
-	if(err){
-		printf("error code %u - error codes: https://www.musicpd.org/doc/libmpdclient/error_8h.html\n",err);
-		return 0;
-	}
-	return c;
+    struct mpd_connection* c = mpd_connection_new(server.host, server.port, 0);
+    enum mpd_error err = mpd_connection_get_error(c);
+    if(err){
+        printf("error code %u\n", err);
+        return 0;
+    }
+    return c;
 }
 
 int main(int argc, char **argv)
@@ -57,13 +57,23 @@ int main(int argc, char **argv)
     }
 
     /* parse options */
-    int option;
-    while((option = getopt(argc, argv, "qh:p:")) != -1){
-        switch(option){
+
+    static struct option long_options[] = {
+        /*   NAME       ARGUMENT           FLAG  SHORTNAME */
+        {"host",    required_argument, NULL, 'h'},
+        {"port",    required_argument, NULL, 'p'},
+        {"quiet",   no_argument,       NULL, 'q'},
+        {NULL,      0,                 NULL, 0}
+    };
+
+    int oc;
+    int oi = 0;
+    while ((oc = getopt_long(argc, argv, "h:p:q", long_options, &oi)) != -1) {
+        switch (oc) {
             case 'q': options.quiet = 1; break;
             case 'h': server.host = optarg; break;
             case 'p': server.port = atoi(optarg); break;
-            default: fprintf(stderr, "illegal option: %s\n", optarg);
+            default: exit(1);
         }
     }
 
@@ -84,7 +94,7 @@ int main(int argc, char **argv)
         return -1;
     }
 
-	struct mpd_connection* c = conn();
+    struct mpd_connection* c = conn();
 
     /* validate mpd connection */
     if (!c) {
@@ -96,16 +106,17 @@ int main(int argc, char **argv)
     if (!tracks[0]) {
         struct mpd_song* curr = mpd_run_current_song(c);
         tracks[0]= mpd_song_get_uri(curr);
-        printf("using current\n");
     }
 
     /* add all given tracks to playlist */
     track = tracks;
     while (*track) {
         if (mpd_run_playlist_add(c, playlist, *track)) {
-            if (!options.quiet) printf("Added \"%s\" to playlist \"%s\"\n", *track, playlist);
+            if (!options.quiet) printf("Added \"%s\" to playlist \"%s\"\n",
+                    *track, playlist);
         } else {
-            fprintf(stderr, "failed to add \"%s\" to playlist \"%s\"\n", *track, playlist);
+            fprintf(stderr, "failed to add \"%s\" to playlist \"%s\"\n",
+                    *track, playlist);
             return -1;
         }
         track++;

@@ -3,9 +3,10 @@
 mplist \- add tracks to mpd playlists
 .SH SYNOPSIS
 .B mplist
-mplist [<options>] -l <playlist> [<track>] [<track>] ...
+mplist [<options>] <playlist> [<track>] [<track>] ...
 .SH DESCRIPTION
 Mplist is a utility for mpd. Add one or more tracks to an mpd playlist
+<playlist> is obligatory. <track> is optional and will fallback to currently playing track
 .SH OPTIONS
 .TP
 .B \-h
@@ -13,9 +14,6 @@ Specify mpd host to override environment variables
 .TP
 .B \-p
 Specify mpd port to override environment variables
-.TP
-.B \-l
-Selected playlist
 .TP
 .B \-q
 Quiet mode = suppress output
