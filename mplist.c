@@ -12,7 +12,7 @@ extern char **environ;
 extern int errno ;
 
 /* mpd server properties */
-struct server {
+struct {
     char *host;
     unsigned int port;
 } server;
@@ -25,11 +25,11 @@ struct option long_options[] = {
     {NULL,      0,                 NULL, 0}
 };
 
-struct options {
+struct {
     int quiet;
 } options;
 
-struct mpd_connection *conn()
+struct mpd_connection *mpd_connect()
 {
     struct mpd_connection *c = mpd_connection_new(server.host, server.port, 0);
     enum mpd_error mpd_error = mpd_connection_get_error(c);
@@ -86,7 +86,7 @@ int main(int argc, char **argv)
     }
 
     /* connect to server and validate */
-    struct mpd_connection* c = conn();
+    struct mpd_connection* c = mpd_connect();
     if (!c) {
         fprintf(stderr, "failed to connect: %s\n", strerror(errno));
         return -1;
