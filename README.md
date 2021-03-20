@@ -23,6 +23,7 @@ host and port read from environment variables `$MPD_HOST` and `$MPD_PORT` if not
 $ mplist -h music.local -p 6600 "mysillyplaylist" someband/tehalbum/stupidsong.flac
 $ mplist "goodsongs" "$(mpc  -f %file%)"
 $ mplist "verygoodsongs"
+```
 
 ## dependencies
 
