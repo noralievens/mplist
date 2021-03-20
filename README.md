@@ -1,9 +1,8 @@
-## mplist
+# mplist
 
-mpd playlist utility
-add tracks (or the current track) to s playlist
+mpd playlist utility - add tracks to a playlist
 
-### usage
+## usage
 
 `mplist [options] <playlist> <track> <track>  ...`
 
@@ -11,8 +10,7 @@ add tracks (or the current track) to s playlist
 `<track>` is optional and will fallback to current track
 
 
-1## examples
-
+## examples
 ```
 $ mplist -h music.local -p 6600 "mysillyplaylist" someband/tehalbum/stupidsong.flac
 $ mplist "goodsongs" $(mpc queued -f %file%)
