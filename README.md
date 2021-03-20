@@ -9,6 +9,11 @@ mpd playlist utility - add tracks to a playlist
 `<playlist>` is mandatory
 `<track>` is optional and will fallback to current track
 
+## options
+
+`--host,    -h`
+`--port,    -p`
+`--quiet,   -q`
 
 ## examples
 ```
