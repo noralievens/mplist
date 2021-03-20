@@ -20,4 +20,3 @@ mpd playlist utility - add tracks to a playlist
 $ mplist -h music.local -p 6600 "mysillyplaylist" someband/tehalbum/stupidsong.flac
 $ mplist "goodsongs" $(mpc queued -f %file%)
 $ mplist "verygoodsongs"
-```
