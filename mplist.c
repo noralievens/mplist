@@ -17,7 +17,6 @@ struct server {
     unsigned int port;
 } server;
 
-
 /* arg options */
 struct option long_options[] = {
     {"host",    required_argument, NULL, 'h'},
@@ -25,7 +24,6 @@ struct option long_options[] = {
     {"quiet",   no_argument,       NULL, 'q'},
     {NULL,      0,                 NULL, 0}
 };
-
 
 struct options {
     int quiet;
