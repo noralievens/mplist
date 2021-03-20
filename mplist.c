@@ -1,39 +1,42 @@
 #include <errno.h>
+#include <getopt.h>
 #include <mpd/client.h>
-#include <stdio.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <getopt.h>
+
+#define ENV_HOST    "MPD_HOST"
+#define ENV_PORT    "MPD_PORT"
 
 extern char **environ;
 extern int errno ;
-extern char *optarg;
-extern int optind, opterr, optopt;
 
-char *strstr_after(const char* haystack, const char* needle)
-{
-    char *start = strstr(haystack, needle);
-    if (!start) return NULL;
-    else return start+strlen(needle);
-}
-
+/* mpd server properties */
 struct server {
     char *host;
     unsigned int port;
 } server;
 
+
+/* arg options */
+struct option long_options[] = {
+    {"host",    required_argument, NULL, 'h'},
+    {"port",    required_argument, NULL, 'p'},
+    {"quiet",   no_argument,       NULL, 'q'},
+    {NULL,      0,                 NULL, 0}
+};
+
+
 struct options {
     int quiet;
 } options;
 
-struct mpd_connection* conn()
+struct mpd_connection *conn()
 {
-    struct mpd_connection* c = mpd_connection_new(server.host, server.port, 0);
-    enum mpd_error err = mpd_connection_get_error(c);
-    if(err){
-        printf("error code %u\n", err);
+    struct mpd_connection *c = mpd_connection_new(server.host, server.port, 0);
+    enum mpd_error mpd_error = mpd_connection_get_error(c);
+    if(mpd_error){
+        printf("error code %u\n", mpd_error);
         return 0;
     }
     return c;
@@ -47,25 +50,15 @@ int main(int argc, char **argv)
 
     /* ENV VAR server host and port */
     while (*environ) {
-        char *envline = NULL;
-        if ((envline = strstr_after(*environ, "MPD_HOST="))) {
-            server.host = envline;
-        } else if ((envline = strstr_after(*environ, "MPD_PORT="))) {
-            server.port = atoi(envline);
+        if (strstr(*environ, ENV_HOST)) {
+            server.host = (*environ)+(strlen(ENV_HOST)+1);
+        } else if (strstr(*environ, ENV_PORT)) {
+            server.port = atoi((*environ)+(strlen(ENV_PORT)+1));
         }
         environ++;
     }
 
     /* parse options */
-
-    static struct option long_options[] = {
-        /*   NAME       ARGUMENT           FLAG  SHORTNAME */
-        {"host",    required_argument, NULL, 'h'},
-        {"port",    required_argument, NULL, 'p'},
-        {"quiet",   no_argument,       NULL, 'q'},
-        {NULL,      0,                 NULL, 0}
-    };
-
     int oc;
     int oi = 0;
     while ((oc = getopt_long(argc, argv, "h:p:q", long_options, &oi)) != -1) {
@@ -94,9 +87,8 @@ int main(int argc, char **argv)
         return -1;
     }
 
+    /* connect to server and validate */
     struct mpd_connection* c = conn();
-
-    /* validate mpd connection */
     if (!c) {
         fprintf(stderr, "failed to connect: %s\n", strerror(errno));
         return -1;
