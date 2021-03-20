@@ -6,14 +6,14 @@ mpd playlist utility - add tracks to a playlist
 
 `mplist [options] <playlist> <track> <track>  ...`
 
-`<playlist>` is mandatory
+`<playlist>` is mandatory  
 `<track>` is optional and will fallback to current track
 
 ## options
 
-`--host,    -h`
-`--port,    -p`
-`--quiet,   -q`
+`--host,    -h`  
+`--port,    -p`  
+`--quiet,   -q`  
 
 ## examples
 ```
