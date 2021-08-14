@@ -5,7 +5,7 @@ MANPREFIX = ${PREFIX}/share/man
 LIBS = /usr/lib/x86_64-linux-gnu/libmpdclient.so.2
 INCL = -I/usr/include/mpd
 CC = gcc
-CFLAGS = -g -Wall -std=c99 -pedantic
+CFLAGS = -Wall -std=c99 -pedantic
 
 .PHONY: default all clean
 
